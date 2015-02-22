@@ -1,40 +1,71 @@
-## Put comments here that give an overall description of what your
-## functions do
+## These functions will cache and compute the inverse of a matrix
+##
+## Computing the inverse of a square matrix is done using the solve function in R. 
+## For example, if X is a square invertible matrix, then solve(X) returns its inverse.
 
-## Write a short comment describing this function
+## This function creates a special "matrix" object that can cache its inverse.
 
 makeCacheMatrix <- function(x = matrix()) {
-
-
-    m <- NULL
+        
+        m <- NULL
         set <- function(y) {
                 x <<- y
                 m <<- NULL
         }
         get <- function() x
-        setmean <- function(mean) m <<- mean
-        getmean <- function() m
-        list(set = set, get = get,
-             setmean = setmean,
-             getmean = getmean)
 
+        setInverseMatrix<-function(solve) m<<- solve
+        geInversereMatrix<-function() m
+        return(list(set=set, get=get,
+             setInverseMatrix=setInverseMatrix,
+             getInverseMatrix=getInverseMatrix))
+        
 }
 
 
-## Write a short comment describing this function
+
+## This function computes the inverse of the special "matrix" returned by makeCacheMatrix above. 
+## If the inverse has already been calculated (and the matrix has not changed), 
+## the cachesolve retrieves the inverse from the cache.
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-
-        m <- x$getmean()
+       
+         m <- x$getInverseMatrix()
         if(!is.null(m)) {
                 message("getting cached data")
                 return(m)
         }
-        data <- x$get()
-        m <- mean(data, ...)
-        x$setmean(m)
-        m	
+        matrix<-x$get()
+        m<-solve(matrix, ...)
+        x$setInverseMatrix(m)
+        return(m)                
+}
 
 
+
+makeCacheMatrix <- function(x = matrix()) {
+  m<-NULL
+  set<-function(y){
+  x<<-y
+  m<<-NULL
+}
+get<-function() x
+setmatrix<-function(solve) m<<- solve
+getmatrix<-function() m
+list(set=set, get=get,
+   setmatrix=setmatrix,
+   getmatrix=getmatrix)
+}
+
+cacheSolve <- function(x=matrix(), ...) {
+    m<-x$getmatrix()
+    if(!is.null(m)){
+      message("getting cached data")
+      return(m)
+    }
+    matrix<-x$get
+    m<-solve(matrix, ...)
+    x$setmatrix(m)
+    m
 }
